@@ -1,0 +1,7 @@
+---
+
+pipeline:
+  test:
+    image: rust:slim-stretch
+    commands:
+      - cargo test
