@@ -4,3 +4,4 @@ version = "0.1.0"
 authors = ["Nate Catelli <ncatelli@packetfire.org>"]
 
 [dependencies]
+ws = "0.7.6"
