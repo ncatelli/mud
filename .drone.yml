@@ -9,3 +9,9 @@ pipeline:
   docker build:
     image: plugins/docker
     repo: ncatelli/mud
+    auto_tag: true
+    secrets: [ docker_username, docker_password ]
+    when:
+      branches:
+        - master
+        - release/*
