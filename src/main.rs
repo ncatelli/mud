@@ -1,3 +1,7 @@
+extern crate mud;
+
 fn main() {
-    println!("Hello, world!");
+    if let Err(e) = mud::run() {
+        println!("{}", e);
+    };
 }
