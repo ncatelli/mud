@@ -12,7 +12,7 @@ impl ws::Handler for Router {
         let out = self.sender.clone();
 
         match req.resource() {
-            "/echo" => self.inner = Box::new(Echo { ws: out }),
+            "/events" => self.inner = Box::new(EventRouter { ws: out }),
 
             // Use the default child handler, NotFound
             _ => (),
@@ -62,14 +62,13 @@ impl ws::Handler for NotFound {
 }
 
 // This handler simply echoes all messages back to the client
-struct Echo {
+struct EventRouter {
     ws: ws::Sender,
 }
 
-impl ws::Handler for Echo {
+impl ws::Handler for EventRouter {
     fn on_message(&mut self, msg: ws::Message) -> ws::Result<()> {
-        println!("Echo handler received a message: {}", msg);
-        self.ws.send(msg)
+        self.ws.send(format!("Event received: {}", msg))
     }
 }
 
