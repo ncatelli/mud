@@ -22,11 +22,6 @@ impl ws::Handler for Router {
         self.inner.on_request(req)
     }
 
-    // Pass through any other methods that should be delegated to the child.
-    //
-    // You could probably use a macro for this if you have many different
-    // routers or were building some sort of routing framework.
-
     fn on_shutdown(&mut self) {
         self.inner.on_shutdown()
     }
@@ -61,7 +56,6 @@ impl ws::Handler for NotFound {
     }
 }
 
-// This handler simply echoes all messages back to the client
 struct EventRouter {
     ws: ws::Sender,
 }
@@ -75,7 +69,6 @@ impl ws::Handler for EventRouter {
 pub fn run() -> Result<(), &'static str> {
     env_logger::init();
 
-    // Listen on an address and call the closure for each connection
     match ws::listen("0.0.0.0:3012", |out| {
         // Use our router as the handler to route the new connection
         Router {
