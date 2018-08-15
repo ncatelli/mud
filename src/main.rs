@@ -1,9 +1,6 @@
-/// WebSocket server using trait objects to route
-/// to an infinitely extensible number of handlers
 extern crate ws;
 extern crate env_logger;
 
-// A WebSocket handler that routes connections to different boxed handlers by resource
 struct Router {
     sender: ws::Sender,
     inner: Box<ws::Handler>,
@@ -16,30 +13,6 @@ impl ws::Handler for Router {
 
         match req.resource() {
             "/echo" => self.inner = Box::new(Echo { ws: out }),
-
-            // Route to a data handler
-            "/data/one" => {
-                self.inner = Box::new(Data {
-                    ws: out,
-                    data: vec!["one", "two", "three", "four", "five"],
-                })
-            }
-
-            // Route to another data handler
-            "/data/two" => {
-                self.inner = Box::new(Data {
-                    ws: out,
-                    data: vec!["いち", "二", "さん", "四", "ご"],
-                })
-            }
-
-            // Use a closure as the child handler
-            "/closure" => {
-                self.inner = Box::new(move |msg: ws::Message| {
-                    println!("Got a message on a closure handler: {}", msg);
-                    out.close_with_reason(ws::CloseCode::Error, "Not Implemented.")
-                })
-            }
 
             // Use the default child handler, NotFound
             _ => (),
@@ -97,28 +70,6 @@ impl ws::Handler for Echo {
     fn on_message(&mut self, msg: ws::Message) -> ws::Result<()> {
         println!("Echo handler received a message: {}", msg);
         self.ws.send(msg)
-    }
-}
-
-// This handler sends some data to the client and then terminates the connection on the first
-// message received, presumably confirming receipt of the data
-struct Data {
-    ws: ws::Sender,
-    data: Vec<&'static str>,
-}
-
-impl ws::Handler for Data {
-    fn on_open(&mut self, _: ws::Handshake) -> ws::Result<()> {
-        for msg in &self.data {
-            self.ws.send(*msg)?
-        }
-        Ok(())
-    }
-
-    fn on_message(&mut self, msg: ws::Message) -> ws::Result<()> {
-        println!("Data handler received a message: {}", msg);
-        println!("Data handler going down.");
-        self.ws.close(ws::CloseCode::Normal)
     }
 }
 
