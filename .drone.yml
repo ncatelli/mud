@@ -5,3 +5,7 @@ pipeline:
     image: rust:slim-stretch
     commands:
       - cargo test
+
+  docker build:
+    image: plugins/docker
+    repo: ncatelli/mud
