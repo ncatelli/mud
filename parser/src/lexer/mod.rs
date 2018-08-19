@@ -37,6 +37,9 @@ pub enum Lexeme {
     Colon,
     LeftParen,
     RightParen,
+    SingleQuote,
+    DoubleQuote,
+    Pound,
     Error(char),
 }
 
@@ -46,12 +49,15 @@ fn lex(input: &str) -> Result<Vec<Lexeme>, &'static str> {
         match c {
             c if c.is_alphabetic() => Lexeme::Char(c),
             c if c.is_digit(10) => Lexeme::Integer(c.to_digit(10).unwrap()),
-            '.' => Lexeme::Period,
-            ':' => Lexeme::Colon,
-            ';' => Lexeme::Semicolon,
-            '(' => Lexeme::LeftParen,
-            ')' => Lexeme::RightParen,
-            _   => Lexeme::Error(c),
+            '.'  => Lexeme::Period,
+            ':'  => Lexeme::Colon,
+            ';'  => Lexeme::Semicolon,
+            '('  => Lexeme::LeftParen,
+            ')'  => Lexeme::RightParen,
+            '\'' => Lexeme::SingleQuote,
+            '"'  => Lexeme::DoubleQuote,
+            '#'  => Lexeme::Pound,
+            _    => Lexeme::Error(c),
         }
     }).collect();
 

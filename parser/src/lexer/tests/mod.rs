@@ -34,3 +34,25 @@ fn can_lex_semicolon() {
 fn can_lex_period() {
     assert_eq!(Lexeme::Period, lex(".").unwrap()[0])
 }
+
+#[test]
+fn can_lex_single_quote() {
+    assert_eq!(Lexeme::SingleQuote, lex("'").unwrap()[0])
+}
+
+#[test]
+fn can_lex_double_quote() {
+    assert_eq!(Lexeme::DoubleQuote, lex("\"").unwrap()[0])
+}
+
+#[test]
+fn can_lex_pound() {
+    assert_eq!(Lexeme::Pound, lex("#").unwrap()[0])
+}
+
+#[test]
+fn invalid_chars_return_errors() {
+    assert_eq!(Lexeme::Error('&'), lex("&").unwrap()[0]);
+    assert_eq!(Lexeme::Error('@'), lex("@").unwrap()[0]);
+    assert_eq!(Lexeme::Error('{'), lex("{").unwrap()[0]);
+}
