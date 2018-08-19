@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 #[derive(Debug)]
 enum Token<'a> {
     Operator(&'a Operator),
@@ -53,21 +56,4 @@ fn lex(input: &str) -> Result<Vec<Lexeme>, &'static str> {
     }).collect();
 
     Ok(lex_vec)
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn can_lex_integers() {
-        let lexeme = "5";
-        assert_eq!(Lexeme::Integer(5), lex(lexeme).unwrap()[0])
-    }
-
-    #[test]
-    fn can_lex_chars() {
-        let lexeme = "c";
-        assert_eq!(Lexeme::Char('c'), lex(lexeme).unwrap()[0])
-    }
 }
