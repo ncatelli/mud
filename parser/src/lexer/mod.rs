@@ -13,7 +13,6 @@ enum Token<'a> {
 enum ComplexType<'a> {
     Array(Vec<&'a Primitive<'a>>),
     Primitive(&'a Primitive<'a>),
-    ObjectId(&'a str),
 }
 
 #[derive(Debug)]
@@ -26,10 +25,11 @@ enum Primitive<'a> {
     Float(f64),
     Int(i64),
     Str(&'a str),
+    ObjectId(&'a str),
 }
 
 #[derive(Debug, PartialEq)]
-pub enum Lexeme {
+enum Lexeme {
     Char(char),
     Integer(u32),
     Period,
@@ -39,21 +39,27 @@ pub enum Lexeme {
     RightParen,
     SingleQuote,
     DoubleQuote,
+    LeftBracket,
+    RightBracket,
     Pound,
+    Whitespace,
     Error(char),
 }
 
-/// Lexes each character into an array of Lexemes.
-fn lex(input: &str) -> Result<Vec<Lexeme>, &'static str> {
+/// Read each character into an array of Lexemes.
+fn generate_lexeme_vector(input: &str) -> Result<Vec<Lexeme>, &'static str> {
     let lex_vec = input.chars().map(|c| {
         match c {
             c if c.is_alphabetic() => Lexeme::Char(c),
+            c if c.is_whitespace() => Lexeme::Whitespace,
             c if c.is_digit(10) => Lexeme::Integer(c.to_digit(10).unwrap()),
             '.'  => Lexeme::Period,
             ':'  => Lexeme::Colon,
             ';'  => Lexeme::Semicolon,
             '('  => Lexeme::LeftParen,
             ')'  => Lexeme::RightParen,
+            '['  => Lexeme::LeftBracket,
+            ']'  => Lexeme::RightBracket,
             '\'' => Lexeme::SingleQuote,
             '"'  => Lexeme::DoubleQuote,
             '#'  => Lexeme::Pound,
@@ -62,4 +68,8 @@ fn lex(input: &str) -> Result<Vec<Lexeme>, &'static str> {
     }).collect();
 
     Ok(lex_vec)
+}
+
+fn lex<'a>(input: &str) -> Result<Vec<Token<'a>>, &'static str> {
+    Err("Lexer Fails")
 }
