@@ -1,6 +1,7 @@
 use ::lexer::*;
 
 #[test]
+#[ignore]
 fn it_works() {
     let t = lex("hello");
 
