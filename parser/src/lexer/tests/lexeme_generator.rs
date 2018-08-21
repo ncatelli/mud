@@ -2,7 +2,7 @@ use ::lexer::*;
 
 #[test]
 fn can_lex_integers() {
-    assert_eq!(Lexeme::Integer(5), generate_lexeme_vector("5").unwrap()[0])
+    assert_eq!(Lexeme::Integer('5'), generate_lexeme_vector("5").unwrap()[0])
 }
 
 #[test]
@@ -38,11 +38,6 @@ fn can_lex_semicolon() {
 #[test]
 fn can_lex_period() {
     assert_eq!(Lexeme::Period, generate_lexeme_vector(".").unwrap()[0])
-}
-
-#[test]
-fn can_lex_single_quote() {
-    assert_eq!(Lexeme::SingleQuote, generate_lexeme_vector("'").unwrap()[0])
 }
 
 #[test]
