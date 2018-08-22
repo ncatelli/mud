@@ -52,7 +52,7 @@ impl ToString for Lexeme {
 			Lexeme::RightBracket => "]".to_string(),
 			Lexeme::Pound => "#".to_string(),
 			Lexeme::Whitespace => " ".to_string(),
-			Lexeme::Error(c) => "Error(c)".to_string(),
+			Lexeme::Error(c) => format!("Error({})", c).to_string(),
 		}
 	}
 }
@@ -89,7 +89,7 @@ fn lex(input: String) -> Result<Vec<Token>, &'static str> {
 
     let l_iter = lexeme_vec.into_iter();
     let mut lp = l_iter.peekable();
-    while let Some(ref l) = lp.peek() {
+    while let Some(ref l) = lp.next() {
         match l {
             Lexeme::DoubleQuote => tok_vec.push(lex_str(&l, &mut lp)),
             _ => return Err("Unimplemented case")
@@ -99,7 +99,7 @@ fn lex(input: String) -> Result<Vec<Token>, &'static str> {
     Err("Lexer Fails")
 }
 
-fn lex_str<T: Iterator<Item = Lexeme>>(l: &Lexeme, iter: &mut Peekable<T>) -> Token {
+fn lex_str<T: Iterator<Item = Lexeme>>(_l: &Lexeme, iter: &mut Peekable<T>) -> Token {
     iter.peek();
     let s = Primitive::Str("Hello".to_string());
     Token::Operand(s)
