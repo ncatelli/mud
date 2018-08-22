@@ -5,29 +5,19 @@ mod tests;
 
 #[derive(Debug)]
 enum Token<'a> {
-    Operator(&'a Operator),
-    Operand(&'a ComplexType<'a>),
+    Operator(char),
+    Operand(&'a Primitive),
+    Array(Vec<&'a Primitive),
     Call,
     Args,
 }
 
 #[derive(Debug)]
-enum ComplexType<'a> {
-    Array(Vec<&'a Primitive<'a>>),
-    Primitive(&'a Primitive<'a>),
-}
-
-#[derive(Debug)]
-enum Operator {
-    Op(char),
-}
-
-#[derive(Debug)]
-enum Primitive<'a> {
+enum Primitive {
     Float(f64),
     Int(i64),
-    Str(&'a str),
-    ObjectId(&'a str),
+    Str(String),
+    ObjectId(String),
 }
 
 #[derive(Debug, PartialEq)]
@@ -68,7 +58,7 @@ impl ToString for Lexeme {
 }
 
 /// Read each character into an array of Lexemes.
-fn generate_lexeme_vector(input: &str) -> Result<Vec<Lexeme>, &'static str> {
+fn generate_lexeme_vector(input: &String) -> Result<Vec<Lexeme>, &'static str> {
     let lex_vec = input.chars().map(|c| {
         match c {
             c if c.is_alphabetic() => Lexeme::Char(c),
@@ -90,19 +80,25 @@ fn generate_lexeme_vector(input: &str) -> Result<Vec<Lexeme>, &'static str> {
     Ok(lex_vec)
 }
 
-fn lex<'a>(input: &str) -> Result<Vec<Token<'a>>, &'static str> {
-    let tok_vec: Vec<Token> = Vec::new();
+fn lex<'a>(input: &String) -> Result<Vec<Token<'a>>, &'static str> {
+    let mut tok_vec: Vec<Token> = Vec::new();
     let lexeme_vec = match generate_lexeme_vector(&input) {
        Ok(lt) => lt,
        Err(e) => return Err(e),
     };
 
-    let mut lp = lexeme_vec.iter().peekable();
+    let mut lp = lexeme_vec.into_iter().peekable();
     while let Some(&l) = lp.peek() {
         match l {
-            _ => (),
+            Lexeme::DoubleQuote => tok_vec.push(lex_str(&l, &mut lp)),
+            _ => return Err("Unimplemented case")
         }
     }
 
     Err("Lexer Fails")
+}
+
+fn lex_str<'a, T: Iterator<Item = Lexeme>>(l: &'a Lexeme, iter: &'a mut Peekable<T>) -> Token<'a> {
+    let s = Primitive::Str("Hello".to_string());
+    Token::Operand(&s)
 }
