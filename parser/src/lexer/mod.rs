@@ -4,10 +4,10 @@ use std::iter::Peekable;
 mod tests;
 
 #[derive(Debug)]
-enum Token<'a> {
+enum Token {
     Operator(char),
-    Operand(&'a Primitive),
-    Array(Vec<&'a Primitive),
+    Operand(Primitive),
+    Array(Vec<Primitive>),
     Call,
     Args,
 }
@@ -80,15 +80,16 @@ fn generate_lexeme_vector(input: &String) -> Result<Vec<Lexeme>, &'static str> {
     Ok(lex_vec)
 }
 
-fn lex<'a>(input: &String) -> Result<Vec<Token<'a>>, &'static str> {
+fn lex(input: String) -> Result<Vec<Token>, &'static str> {
     let mut tok_vec: Vec<Token> = Vec::new();
     let lexeme_vec = match generate_lexeme_vector(&input) {
        Ok(lt) => lt,
        Err(e) => return Err(e),
     };
 
-    let mut lp = lexeme_vec.into_iter().peekable();
-    while let Some(&l) = lp.peek() {
+    let l_iter = lexeme_vec.into_iter();
+    let mut lp = l_iter.peekable();
+    while let Some(ref l) = lp.peek() {
         match l {
             Lexeme::DoubleQuote => tok_vec.push(lex_str(&l, &mut lp)),
             _ => return Err("Unimplemented case")
@@ -98,7 +99,8 @@ fn lex<'a>(input: &String) -> Result<Vec<Token<'a>>, &'static str> {
     Err("Lexer Fails")
 }
 
-fn lex_str<'a, T: Iterator<Item = Lexeme>>(l: &'a Lexeme, iter: &'a mut Peekable<T>) -> Token<'a> {
+fn lex_str<T: Iterator<Item = Lexeme>>(l: &Lexeme, iter: &mut Peekable<T>) -> Token {
+    iter.peek();
     let s = Primitive::Str("Hello".to_string());
-    Token::Operand(&s)
+    Token::Operand(s)
 }
