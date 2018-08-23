@@ -18,6 +18,7 @@ enum Primitive {
     Int(i64),
     Str(String),
     ObjectId(String),
+    Bool(bool),
 }
 
 #[derive(Debug, PartialEq)]
@@ -119,4 +120,25 @@ fn lex_str<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, 
     }
 
     Err("End of input reached before string termination.")
+}
+
+fn lex_obj<T: Iterator<Item = Lexeme>>(_iter: &mut Peekable<T>) -> Result<Token, &'static str> {
+
+    Err("End of input reached before object id termination.")
+}
+
+fn lex_array<T: Iterator<Item = Lexeme>>(_iter: &mut Peekable<T>) -> Result<Token, &'static str> {
+
+    Err("End of input reached before array termination.")
+}
+
+
+fn lex_number<T: Iterator<Item = Lexeme>>(_iter: &mut Peekable<T>) -> Result<Token, &'static str> {
+
+    Err("End of input reached before number termination.")
+}
+
+fn lex_bool<T: Iterator<Item = Lexeme>>(_iter: &mut Peekable<T>) -> Result<Token, &'static str> {
+
+    Err("End of input reached before bool termination.")
 }
