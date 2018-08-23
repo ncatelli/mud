@@ -104,6 +104,7 @@ fn lex(input: String) -> Result<Vec<Token>, &'static str> {
                     Err(e) => return Err(e),
                 }
             }
+            Lexeme::Whitespace => continue,
             _ => {
                 return Err("Unexpected case")
             }
