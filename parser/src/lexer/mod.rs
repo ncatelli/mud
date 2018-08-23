@@ -17,11 +17,11 @@ enum Primitive {
     Float(f64),
     Int(i64),
     Str(String),
-    ObjectId(String),
+    Object(i64),
     Bool(bool),
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 enum Lexeme {
     Char(char),
     Integer(char),
@@ -98,6 +98,12 @@ fn lex(input: String) -> Result<Vec<Token>, &'static str> {
                     Err(e) => return Err(e),
                 }
             },
+            Lexeme::Pound => {
+                match lex_obj(&mut lp) {
+                    Ok(t) => tok_vec.push(t),
+                    Err(e) => return Err(e),
+                }
+            }
             _ => {
                 return Err("Unexpected case")
             }
@@ -115,23 +121,34 @@ fn lex_str<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, 
             Lexeme::DoubleQuote => {
                 return Ok(Token::Operand(Primitive::Str(str_vec)))
             },
-            _ => str_vec.push_str(&val.to_string()),
+            _ => str_vec.push_str(&val.to_string())
        }
     }
 
     Err("End of input reached before string termination.")
 }
 
-fn lex_obj<T: Iterator<Item = Lexeme>>(_iter: &mut Peekable<T>) -> Result<Token, &'static str> {
+fn lex_obj<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, &'static str> {
+    let mut str_vec = String::new();
+    
+    while let Some(val) = iter.peek().cloned() {
+        match val {
+            Lexeme::Integer(i) => str_vec.push_str(&i.to_string()),
+            Lexeme::Whitespace => break,
+            Lexeme::Period => break,
+            Lexeme::Semicolon => break,
+            _ => return Err("Invalid character. Expected ObjectID.")
+        }
+        iter.next();
+    }
 
-    Err("End of input reached before object id termination.")
+    Ok(Token::Operand(Primitive::Object(str_vec.parse::<i64>().unwrap())))
 }
 
 fn lex_array<T: Iterator<Item = Lexeme>>(_iter: &mut Peekable<T>) -> Result<Token, &'static str> {
 
     Err("End of input reached before array termination.")
 }
-
 
 fn lex_number<T: Iterator<Item = Lexeme>>(_iter: &mut Peekable<T>) -> Result<Token, &'static str> {
 

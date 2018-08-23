@@ -9,7 +9,7 @@ fn tokenize_valid_string() {
     };
     
     let first = &t_vec[0];
-    let _stok = match first {
+    match first {
         Token::Operand(o) => match o {
             Primitive::Str(s) => s,
             _ => panic!("token isn't a string"),
