@@ -89,18 +89,34 @@ fn lex(input: String) -> Result<Vec<Token>, &'static str> {
 
     let l_iter = lexeme_vec.into_iter();
     let mut lp = l_iter.peekable();
-    while let Some(ref l) = lp.next() {
+    while let Some(l) = lp.next() {
         match l {
-            Lexeme::DoubleQuote => tok_vec.push(lex_str(&l, &mut lp)),
-            _ => return Err("Unimplemented case")
+            Lexeme::DoubleQuote => {
+                match lex_str(&mut lp) {
+                    Ok(t) => tok_vec.push(t),
+                    Err(e) => return Err(e),
+                }
+            },
+            _ => {
+                return Err("Unexpected case")
+            }
         }
     }
 
-    Err("Lexer Fails")
+    Ok(tok_vec)
 }
 
-fn lex_str<T: Iterator<Item = Lexeme>>(_l: &Lexeme, iter: &mut Peekable<T>) -> Token {
-    iter.peek();
-    let s = Primitive::Str("Hello".to_string());
-    Token::Operand(s)
+fn lex_str<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, &'static str> {
+    let mut str_vec = String::new();
+
+    for val in iter {
+       match val {
+            Lexeme::DoubleQuote => {
+                return Ok(Token::Operand(Primitive::Str(str_vec)))
+            },
+            _ => str_vec.push_str(&val.to_string()),
+       }
+    }
+
+    Err("End of input reached before string termination.")
 }
