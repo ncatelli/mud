@@ -1,4 +1,4 @@
-use ::lexer::*;
+use lexer::*;
 
 #[test]
 fn tokenize_valid_object() {
@@ -7,7 +7,7 @@ fn tokenize_valid_object() {
         Ok(v) => v,
         Err(e) => panic!(e),
     };
-   
+
     let first = &t_vec[0];
     match first {
         Token::Operand(o) => match o {
@@ -15,9 +15,9 @@ fn tokenize_valid_object() {
                 if *i != 1337 {
                     panic!("Token id not parsed correctly")
                 }
-            },
+            }
             _ => panic!("token isn't an Object."),
         },
         _ => panic!("Token doesn't match operand."),
-     };
+    };
 }

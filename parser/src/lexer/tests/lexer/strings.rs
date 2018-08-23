@@ -1,4 +1,4 @@
-use ::lexer::*;
+use lexer::*;
 
 #[test]
 fn tokenize_valid_string() {
@@ -7,7 +7,7 @@ fn tokenize_valid_string() {
         Ok(v) => v,
         Err(e) => panic!(e),
     };
-    
+
     let first = &t_vec[0];
     match first {
         Token::Operand(o) => match o {
@@ -15,5 +15,5 @@ fn tokenize_valid_string() {
             _ => panic!("token isn't a string"),
         },
         _ => panic!("Token doesn't match operand."),
-     };
+    };
 }

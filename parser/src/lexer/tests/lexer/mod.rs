@@ -1,2 +1,2 @@
-mod strings;
 mod objects;
+mod strings;
