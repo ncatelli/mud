@@ -135,9 +135,11 @@ fn lex_obj<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, 
     while let Some(val) = iter.peek().cloned() {
         match val {
             Lexeme::Integer(i) => str_vec.push_str(&i.to_string()),
-            Lexeme::Whitespace => break,
-            Lexeme::Period => break,
-            Lexeme::Semicolon => break,
+            Lexeme::Whitespace | 
+            Lexeme::Period | 
+            Lexeme::Semicolon | 
+            Lexeme::RightBracket |
+            Lexeme::RightParen => break,
             _ => return Err("Invalid character. Expected ObjectID.")
         }
         iter.next();
@@ -146,12 +148,20 @@ fn lex_obj<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, 
     Ok(Token::Operand(Primitive::Object(str_vec.parse::<i64>().unwrap())))
 }
 
-fn lex_array<T: Iterator<Item = Lexeme>>(_iter: &mut Peekable<T>) -> Result<Token, &'static str> {
-
-    Err("End of input reached before array termination.")
-}
-
-fn lex_number<T: Iterator<Item = Lexeme>>(_iter: &mut Peekable<T>) -> Result<Token, &'static str> {
+fn lex_number<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, &'static str> {
+    let mut str_vec = String::new();
+    
+    while let Some(val) = iter.peek().cloned() {
+        match val {
+            Lexeme::Integer(i) => str_vec.push_str(&i.to_string()),
+            Lexeme::Period => str_vec.push_str(&String::from(".")),
+            Lexeme::Whitespace | 
+            Lexeme::RightBracket | 
+            Lexeme::RightParen => break,
+            _ => return Err("Invalid character.")
+        }
+        iter.next();
+    }
 
     Err("End of input reached before number termination.")
 }
@@ -159,4 +169,9 @@ fn lex_number<T: Iterator<Item = Lexeme>>(_iter: &mut Peekable<T>) -> Result<Tok
 fn lex_bool<T: Iterator<Item = Lexeme>>(_iter: &mut Peekable<T>) -> Result<Token, &'static str> {
 
     Err("End of input reached before bool termination.")
+}
+
+fn lex_array<T: Iterator<Item = Lexeme>>(_iter: &mut Peekable<T>) -> Result<Token, &'static str> {
+
+    Err("End of input reached before array termination.")
 }
