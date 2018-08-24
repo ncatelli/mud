@@ -91,7 +91,7 @@ fn lex(input: String) -> Result<Vec<Token>, &'static str> {
 
     let l_iter = lexeme_vec.into_iter();
     let mut lp = l_iter.peekable();
-    while let Some(l) = lp.next() {
+    while let Some(l) = lp.peek().cloned() {
         match l {
             Lexeme::DoubleQuote => match lex_str(&mut lp) {
                 Ok(t) => tok_vec.push(t),
@@ -101,9 +101,15 @@ fn lex(input: String) -> Result<Vec<Token>, &'static str> {
                 Ok(t) => tok_vec.push(t),
                 Err(e) => return Err(e),
             },
+            Lexeme::Integer(_) => match lex_number(&mut lp) {
+                Ok(t) => tok_vec.push(t),
+                Err(e) => return Err(e),
+            },
             Lexeme::Whitespace => continue,
             _ => return Err("Unexpected case"),
         }
+
+        lp.next();
     }
 
     Ok(tok_vec)
@@ -111,6 +117,9 @@ fn lex(input: String) -> Result<Vec<Token>, &'static str> {
 
 fn lex_str<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, &'static str> {
     let mut str_vec = String::new();
+
+    // Burn the first doublequote.
+    iter.next();
 
     for val in iter {
         match val {
@@ -125,9 +134,10 @@ fn lex_str<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, 
 fn lex_obj<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, &'static str> {
     let mut str_vec = String::new();
 
-    while let Some(val) = iter.peek().cloned() {
+    while let Some(val) = iter.next() {
         match val {
             Lexeme::Integer(i) => str_vec.push_str(&i.to_string()),
+            Lexeme::Pound => continue,
             Lexeme::Whitespace
             | Lexeme::Period
             | Lexeme::Semicolon
@@ -135,7 +145,6 @@ fn lex_obj<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, 
             | Lexeme::RightParen => break,
             _ => return Err("Invalid character. Expected ObjectID."),
         }
-        iter.next();
     }
 
     Ok(Token::Operand(Primitive::Object(
@@ -146,14 +155,21 @@ fn lex_obj<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, 
 fn lex_number<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, &'static str> {
     let mut str_vec = String::new();
 
-    while let Some(val) = iter.peek().cloned() {
+    while let Some(val) = iter.next() {
         match val {
             Lexeme::Integer(i) => str_vec.push_str(&i.to_string()),
             Lexeme::Period => str_vec.push_str(&String::from(".")),
             Lexeme::Whitespace | Lexeme::RightBracket | Lexeme::RightParen => break,
             _ => return Err("Invalid character."),
         }
-        iter.next();
+    }
+
+    if str_vec.contains('.') {
+    } else {
+        match str_vec.parse::<i64>() {
+            Ok(i) => return Ok(Token::Operand(Primitive::Int(i))),
+            Err(_) => return Err("Unable to parse integer."),
+        }
     }
 
     Err("End of input reached before number termination.")
