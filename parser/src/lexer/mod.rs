@@ -165,14 +165,16 @@ fn lex_number<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Toke
     }
 
     if str_vec.contains('.') {
+        match str_vec.parse::<f64>() {
+            Ok(f) => return Ok(Token::Operand(Primitive::Float(f))),
+            Err(_) => return Err("Unable to parse float."),
+        }
     } else {
         match str_vec.parse::<i64>() {
             Ok(i) => return Ok(Token::Operand(Primitive::Int(i))),
             Err(_) => return Err("Unable to parse integer."),
         }
     }
-
-    Err("End of input reached before number termination.")
 }
 
 fn lex_bool<T: Iterator<Item = Lexeme>>(_iter: &mut Peekable<T>) -> Result<Token, &'static str> {

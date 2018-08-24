@@ -21,3 +21,25 @@ fn tokenize_valid_integer() {
         _ => panic!("Token doesn't match operand."),
     };
 }
+
+#[test]
+fn tokenize_valid_float() {
+    let t = lex("3.14".to_string());
+    let t_vec = match t {
+        Ok(v) => v,
+        Err(e) => panic!(e),
+    };
+
+    let first = &t_vec[0];
+    match first {
+        Token::Operand(o) => match o {
+            Primitive::Float(i) => {
+                if *i != 3.14 {
+                    panic!("Token float not parsed correctly")
+                }
+            }
+            _ => panic!("token isn't an Float."),
+        },
+        _ => panic!("Token doesn't match operand."),
+    };
+}
