@@ -10,14 +10,23 @@ fn tokenize_valid_object() {
 
     let first = &t_vec[0];
     match first {
-        Token::Operand(o) => match o {
-            Primitive::Object(i) => {
-                if *i != 1337 {
-                    panic!("Token id not parsed correctly")
-                }
-            }
-            _ => panic!("token isn't an Object."),
+        Token::Operator(o) => match o {
+            Operator::Pound => (),
+            _ => panic!("Token isn't an Object."),
         },
         _ => panic!("Token doesn't match operand."),
     };
+
+    let second = &t_vec[1];
+
+    match second {
+        Token::Operand(p) => match p {
+            Primitive::Int(i) => match *i {
+                1337 => (),
+                _ => panic!("Object Id didn't parse correctly."),
+            },
+            _ => panic!("Primitive isn't an Int."),
+        },
+        _ => panic!("Token isn't an operand"),
+    }
 }

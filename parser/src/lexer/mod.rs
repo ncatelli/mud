@@ -5,7 +5,7 @@ mod tests;
 
 #[derive(Debug)]
 enum Token {
-    Operator(char),
+    Operator(Operator),
     Operand(Primitive),
     Array(Vec<Primitive>),
     Call,
@@ -17,8 +17,13 @@ enum Primitive {
     Float(f64),
     Int(i64),
     Str(String),
-    Object(i64),
-    Bool(bool),
+}
+
+#[derive(Debug, Clone)]
+enum Operator {
+    Pound,
+    Semicolon,
+    Colon,
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -97,10 +102,7 @@ fn lex(input: String) -> Result<Vec<Token>, &'static str> {
                 Ok(t) => tok_vec.push(t),
                 Err(e) => return Err(e),
             },
-            Lexeme::Pound => match lex_obj(&mut lp) {
-                Ok(t) => tok_vec.push(t),
-                Err(e) => return Err(e),
-            },
+            Lexeme::Pound => tok_vec.push(Token::Operator(Operator::Pound)),
             Lexeme::Integer(_) => match lex_number(&mut lp) {
                 Ok(t) => tok_vec.push(t),
                 Err(e) => return Err(e),
@@ -131,27 +133,6 @@ fn lex_str<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, 
     Err("End of input reached before string termination.")
 }
 
-fn lex_obj<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, &'static str> {
-    let mut str_vec = String::new();
-
-    while let Some(val) = iter.next() {
-        match val {
-            Lexeme::Integer(i) => str_vec.push_str(&i.to_string()),
-            Lexeme::Pound => continue,
-            Lexeme::Whitespace
-            | Lexeme::Period
-            | Lexeme::Semicolon
-            | Lexeme::RightBracket
-            | Lexeme::RightParen => break,
-            _ => return Err("Invalid character. Expected ObjectID."),
-        }
-    }
-
-    Ok(Token::Operand(Primitive::Object(
-        str_vec.parse::<i64>().unwrap(),
-    )))
-}
-
 fn lex_number<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, &'static str> {
     let mut str_vec = String::new();
 
@@ -175,10 +156,6 @@ fn lex_number<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Toke
             Err(_) => return Err("Unable to parse integer."),
         }
     }
-}
-
-fn lex_bool<T: Iterator<Item = Lexeme>>(_iter: &mut Peekable<T>) -> Result<Token, &'static str> {
-    Err("End of input reached before bool termination.")
 }
 
 fn lex_array<T: Iterator<Item = Lexeme>>(_iter: &mut Peekable<T>) -> Result<Token, &'static str> {
