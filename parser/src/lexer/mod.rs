@@ -8,8 +8,7 @@ enum Token {
     Operator(Operator),
     Operand(Primitive),
     Array(Vec<Primitive>),
-    Call,
-    Args,
+    Ref(String),
 }
 
 #[derive(Debug)]
@@ -102,6 +101,10 @@ fn lex(input: String) -> Result<Vec<Token>, &'static str> {
                 Ok(t) => tok_vec.push(t),
                 Err(e) => return Err(e),
             },
+            Lexeme::Char(_) => match lex_ref(&mut lp) {
+                Ok(t) => tok_vec.push(t),
+                Err(e) => return Err(e),
+            },
             Lexeme::Pound => tok_vec.push(Token::Operator(Operator::Pound)),
             Lexeme::Integer(_) => match lex_number(&mut lp) {
                 Ok(t) => tok_vec.push(t),
@@ -156,6 +159,19 @@ fn lex_number<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Toke
             Err(_) => return Err("Unable to parse integer."),
         }
     }
+}
+
+fn lex_ref<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, &'static str> {
+    let mut str_vec = String::new();
+
+    for val in iter {
+        match val {
+            Lexeme::Char(c) => str_vec.push_str(&c.to_string()),
+            _ => return Err("Ref must contain only characters"),
+        }
+    }
+
+    Ok(Token::Ref(str_vec))
 }
 
 fn lex_array<T: Iterator<Item = Lexeme>>(_iter: &mut Peekable<T>) -> Result<Token, &'static str> {
