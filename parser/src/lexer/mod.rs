@@ -7,7 +7,6 @@ mod tests;
 enum Token {
     Operator(Operator),
     Operand(Primitive),
-    Array(Vec<Primitive>),
     Ref(String),
 }
 
@@ -25,6 +24,15 @@ enum Operator {
     Colon,
 }
 
+#[derive(Debug, Clone)]
+enum Grouping {
+    LeftParen,
+    RightParen,
+    LeftBracket,
+    RightBracket,
+    Comma,
+}
+
 #[derive(Debug, PartialEq, Clone)]
 enum Lexeme {
     Char(char),
@@ -37,6 +45,7 @@ enum Lexeme {
     DoubleQuote,
     LeftBracket,
     RightBracket,
+    Comma,
     Pound,
     Whitespace,
     Error(char),
@@ -55,6 +64,7 @@ impl ToString for Lexeme {
             Lexeme::DoubleQuote => "\"".to_string(),
             Lexeme::LeftBracket => "[".to_string(),
             Lexeme::RightBracket => "]".to_string(),
+            Lexeme::Comma => ",".to_string(),
             Lexeme::Pound => "#".to_string(),
             Lexeme::Whitespace => " ".to_string(),
             Lexeme::Error(c) => format!("Error({})", c).to_string(),
@@ -77,6 +87,7 @@ fn generate_lexeme_vector(input: &String) -> Result<Vec<Lexeme>, &'static str> {
             ')' => Lexeme::RightParen,
             '[' => Lexeme::LeftBracket,
             ']' => Lexeme::RightBracket,
+            ',' => Lexeme::Comma,
             '"' => Lexeme::DoubleQuote,
             '#' => Lexeme::Pound,
             _ => Lexeme::Error(c),

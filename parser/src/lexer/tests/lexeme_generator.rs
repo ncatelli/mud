@@ -41,6 +41,14 @@ fn can_lex_right_paren() {
 }
 
 #[test]
+fn can_lex_comma() {
+    assert_eq!(
+        Lexeme::Comma,
+        generate_lexeme_vector(&",".to_string()).unwrap()[0]
+    )
+}
+
+#[test]
 fn can_lex_colon() {
     assert_eq!(
         Lexeme::Colon,
