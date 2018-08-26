@@ -7,7 +7,6 @@ mod tests;
 enum Token {
     Operator(Operator),
     Operand(Primitive),
-    Ref(String),
 }
 
 #[derive(Debug)]
@@ -15,6 +14,7 @@ enum Primitive {
     Float(f64),
     Int(i64),
     Str(String),
+    Symbol(String),
 }
 
 #[derive(Debug, Clone)]
@@ -24,29 +24,13 @@ enum Operator {
     Colon,
 }
 
-#[derive(Debug, Clone)]
-enum Grouping {
-    LeftParen,
-    RightParen,
-    LeftBracket,
-    RightBracket,
-    Comma,
-}
-
 #[derive(Debug, PartialEq, Clone)]
 enum Lexeme {
     Char(char),
     Integer(char),
-    Period,
-    Semicolon,
-    Colon,
-    LeftParen,
-    RightParen,
     DoubleQuote,
-    LeftBracket,
-    RightBracket,
-    Comma,
     Pound,
+    Period,
     Whitespace,
     Error(char),
 }
@@ -56,16 +40,9 @@ impl ToString for Lexeme {
         match self {
             Lexeme::Char(c) => c.to_string(),
             Lexeme::Integer(c) => c.to_string(),
-            Lexeme::Period => ".".to_string(),
-            Lexeme::Semicolon => ";".to_string(),
-            Lexeme::Colon => ":".to_string(),
-            Lexeme::LeftParen => "(".to_string(),
-            Lexeme::RightParen => ")".to_string(),
             Lexeme::DoubleQuote => "\"".to_string(),
-            Lexeme::LeftBracket => "[".to_string(),
-            Lexeme::RightBracket => "]".to_string(),
-            Lexeme::Comma => ",".to_string(),
             Lexeme::Pound => "#".to_string(),
+            Lexeme::Period => ".".to_string(),
             Lexeme::Whitespace => " ".to_string(),
             Lexeme::Error(c) => format!("Error({})", c).to_string(),
         }
@@ -80,16 +57,9 @@ fn generate_lexeme_vector(input: &String) -> Result<Vec<Lexeme>, &'static str> {
             c if c.is_alphabetic() => Lexeme::Char(c),
             c if c.is_whitespace() => Lexeme::Whitespace,
             c if c.is_digit(10) => Lexeme::Integer(c),
-            '.' => Lexeme::Period,
-            ':' => Lexeme::Colon,
-            ';' => Lexeme::Semicolon,
-            '(' => Lexeme::LeftParen,
-            ')' => Lexeme::RightParen,
-            '[' => Lexeme::LeftBracket,
-            ']' => Lexeme::RightBracket,
-            ',' => Lexeme::Comma,
             '"' => Lexeme::DoubleQuote,
             '#' => Lexeme::Pound,
+            '.' => Lexeme::Period,
             _ => Lexeme::Error(c),
         })
         .collect();
@@ -112,7 +82,7 @@ fn lex(input: String) -> Result<Vec<Token>, &'static str> {
                 Ok(t) => tok_vec.push(t),
                 Err(e) => return Err(e),
             },
-            Lexeme::Char(_) => match lex_ref(&mut lp) {
+            Lexeme::Char(_) => match lex_symbol(&mut lp) {
                 Ok(t) => tok_vec.push(t),
                 Err(e) => return Err(e),
             },
@@ -154,7 +124,7 @@ fn lex_number<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Toke
         match val {
             Lexeme::Integer(i) => str_vec.push_str(&i.to_string()),
             Lexeme::Period => str_vec.push_str(&String::from(".")),
-            Lexeme::Whitespace | Lexeme::RightBracket | Lexeme::RightParen => break,
+            Lexeme::Whitespace => break,
             _ => return Err("Invalid character."),
         }
     }
@@ -172,7 +142,7 @@ fn lex_number<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Toke
     }
 }
 
-fn lex_ref<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, &'static str> {
+fn lex_symbol<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, &'static str> {
     let mut str_vec = String::new();
 
     for val in iter {
@@ -182,9 +152,5 @@ fn lex_ref<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, 
         }
     }
 
-    Ok(Token::Ref(str_vec))
-}
-
-fn lex_array<T: Iterator<Item = Lexeme>>(_iter: &mut Peekable<T>) -> Result<Token, &'static str> {
-    Err("End of input reached before array termination.")
+    Ok(Token::Operand(Primitive::Symbol(str_vec)))
 }

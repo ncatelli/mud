@@ -25,54 +25,6 @@ fn can_lex_whitespace() {
 }
 
 #[test]
-fn can_lex_left_paren() {
-    assert_eq!(
-        Lexeme::LeftParen,
-        generate_lexeme_vector(&"(".to_string()).unwrap()[0]
-    )
-}
-
-#[test]
-fn can_lex_right_paren() {
-    assert_eq!(
-        Lexeme::RightParen,
-        generate_lexeme_vector(&")".to_string()).unwrap()[0]
-    )
-}
-
-#[test]
-fn can_lex_comma() {
-    assert_eq!(
-        Lexeme::Comma,
-        generate_lexeme_vector(&",".to_string()).unwrap()[0]
-    )
-}
-
-#[test]
-fn can_lex_colon() {
-    assert_eq!(
-        Lexeme::Colon,
-        generate_lexeme_vector(&":".to_string()).unwrap()[0]
-    )
-}
-
-#[test]
-fn can_lex_semicolon() {
-    assert_eq!(
-        Lexeme::Semicolon,
-        generate_lexeme_vector(&";".to_string()).unwrap()[0]
-    )
-}
-
-#[test]
-fn can_lex_period() {
-    assert_eq!(
-        Lexeme::Period,
-        generate_lexeme_vector(&".".to_string()).unwrap()[0]
-    )
-}
-
-#[test]
 fn can_lex_double_quote() {
     assert_eq!(
         Lexeme::DoubleQuote,
@@ -89,33 +41,20 @@ fn can_lex_pound() {
 }
 
 #[test]
-fn can_lex_left_bracket() {
+fn can_lex_period() {
     assert_eq!(
-        Lexeme::LeftBracket,
-        generate_lexeme_vector(&"[".to_string()).unwrap()[0]
-    )
-}
-
-#[test]
-fn can_lex_right_bracket() {
-    assert_eq!(
-        Lexeme::RightBracket,
-        generate_lexeme_vector(&"]".to_string()).unwrap()[0]
+        Lexeme::Period,
+        generate_lexeme_vector(&".".to_string()).unwrap()[0]
     )
 }
 
 #[test]
 fn invalid_chars_return_errors() {
-    assert_eq!(
-        Lexeme::Error('&'),
-        generate_lexeme_vector(&"&".to_string()).unwrap()[0]
-    );
-    assert_eq!(
-        Lexeme::Error('@'),
-        generate_lexeme_vector(&"@".to_string()).unwrap()[0]
-    );
-    assert_eq!(
-        Lexeme::Error('{'),
-        generate_lexeme_vector(&"{".to_string()).unwrap()[0]
-    );
+    let invalid_chars = vec!['&', '@', '{', '}'];
+    for c in invalid_chars.iter() {
+        assert_eq!(
+            Lexeme::Error(*c),
+            generate_lexeme_vector(&c.to_string()).unwrap()[0]
+        );
+    }
 }
