@@ -20,8 +20,6 @@ enum Primitive {
 #[derive(Debug, Clone)]
 enum Operator {
     Pound,
-    Semicolon,
-    Colon,
 }
 
 #[derive(Debug, PartialEq, Clone)]
