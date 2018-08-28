@@ -18,7 +18,6 @@ fn tokenize_valid_integer() {
             }
             _ => panic!("token isn't an Integer."),
         },
-        _ => panic!("Token doesn't match operand."),
     };
 }
 
@@ -40,6 +39,5 @@ fn tokenize_valid_float() {
             }
             _ => panic!("token isn't an Float."),
         },
-        _ => panic!("Token doesn't match operand."),
     };
 }

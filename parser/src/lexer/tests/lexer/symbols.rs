@@ -16,6 +16,5 @@ fn tokenize_valid_symbol() {
             },
             _ => panic!("Token isn't a Symbol."),
         },
-        _ => panic!("Token doesn't match primitive type."),
     };
 }

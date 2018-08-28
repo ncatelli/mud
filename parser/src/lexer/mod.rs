@@ -5,7 +5,6 @@ mod tests;
 
 #[derive(Debug)]
 enum Token {
-    Operator(Operator),
     Operand(Primitive),
 }
 
@@ -15,11 +14,6 @@ enum Primitive {
     Int(i64),
     Str(String),
     Symbol(String),
-}
-
-#[derive(Debug, Clone)]
-enum Operator {
-    Pound,
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -56,7 +50,6 @@ fn generate_lexeme_vector(input: &String) -> Result<Vec<Lexeme>, &'static str> {
             c if c.is_whitespace() => Lexeme::Whitespace,
             c if c.is_digit(10) => Lexeme::Integer(c),
             '"' => Lexeme::DoubleQuote,
-            '#' => Lexeme::Pound,
             '.' => Lexeme::Period,
             _ => Lexeme::Error(c),
         })
@@ -84,7 +77,6 @@ fn lex(input: String) -> Result<Vec<Token>, &'static str> {
                 Ok(t) => tok_vec.push(t),
                 Err(e) => return Err(e),
             },
-            Lexeme::Pound => tok_vec.push(Token::Operator(Operator::Pound)),
             Lexeme::Integer(_) => match lex_number(&mut lp) {
                 Ok(t) => tok_vec.push(t),
                 Err(e) => return Err(e),

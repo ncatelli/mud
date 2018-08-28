@@ -33,14 +33,6 @@ fn can_lex_double_quote() {
 }
 
 #[test]
-fn can_lex_pound() {
-    assert_eq!(
-        Lexeme::Pound,
-        generate_lexeme_vector(&"#".to_string()).unwrap()[0]
-    )
-}
-
-#[test]
 fn can_lex_period() {
     assert_eq!(
         Lexeme::Period,

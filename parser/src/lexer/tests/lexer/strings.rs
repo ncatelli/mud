@@ -14,6 +14,5 @@ fn tokenize_valid_string() {
             Primitive::Str(s) => s,
             _ => panic!("token isn't a string"),
         },
-        _ => panic!("Token doesn't match operand."),
     };
 }
