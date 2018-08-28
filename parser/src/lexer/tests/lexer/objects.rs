@@ -12,7 +12,6 @@ fn tokenize_valid_object() {
     match first {
         Token::Operator(o) => match o {
             Operator::Pound => (),
-            _ => panic!("Token isn't an Object."),
         },
         _ => panic!("Token doesn't match operand."),
     };
