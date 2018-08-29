@@ -2,7 +2,7 @@ use lexer::*;
 
 #[test]
 fn tokenize_valid_integer() {
-    let t = lex("1337".to_string());
+    let t = lex(&"1337".to_string());
     let t_vec = match t {
         Ok(v) => v,
         Err(e) => panic!(e),
@@ -23,7 +23,7 @@ fn tokenize_valid_integer() {
 
 #[test]
 fn tokenize_valid_float() {
-    let t = lex("3.14".to_string());
+    let t = lex(&"3.14".to_string());
     let t_vec = match t {
         Ok(v) => v,
         Err(e) => panic!(e),

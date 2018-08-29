@@ -2,7 +2,7 @@ use lexer::*;
 
 #[test]
 fn tokenize_valid_symbol() {
-    let t_vec = match lex("helloworld".to_string()) {
+    let t_vec = match lex(&"helloworld".to_string()) {
         Ok(v) => v,
         Err(e) => panic!(e),
     };

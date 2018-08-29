@@ -8,12 +8,13 @@ pub enum Token {
     Operand(Primitive),
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Primitive {
     Float(f64),
     Int(i64),
     Str(String),
     Symbol(String),
+    Nil,
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -58,9 +59,9 @@ fn generate_lexeme_vector(input: &String) -> Result<Vec<Lexeme>, &'static str> {
     Ok(lex_vec)
 }
 
-fn lex(input: String) -> Result<Vec<Token>, &'static str> {
+fn lex(input: &String) -> Result<Vec<Token>, &'static str> {
     let mut tok_vec: Vec<Token> = Vec::new();
-    let lexeme_vec = match generate_lexeme_vector(&input) {
+    let lexeme_vec = match generate_lexeme_vector(input) {
         Ok(lt) => lt,
         Err(e) => return Err(e),
     };
