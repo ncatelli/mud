@@ -4,12 +4,12 @@ use std::iter::Peekable;
 mod tests;
 
 #[derive(Debug)]
-enum Token {
+pub enum Token {
     Operand(Primitive),
 }
 
 #[derive(Debug)]
-enum Primitive {
+pub enum Primitive {
     Float(f64),
     Int(i64),
     Str(String),

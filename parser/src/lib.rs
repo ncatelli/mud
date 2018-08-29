@@ -1,5 +1,6 @@
+mod command;
 mod lexer;
 
-//pub fn parse<'a>(stmt: &'a str) -> Result<&'a Statement, &'static str> {
-//    Err("Invalid Parse")
-//}
+pub fn parse(_stmt: String) -> Result<command::Command, &'static str> {
+    Err("Invalid Parse")
+}
