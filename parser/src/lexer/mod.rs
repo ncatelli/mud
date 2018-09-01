@@ -1,8 +1,20 @@
+//! lexer includes methods for lexing input strings into internal primitives.
+
 use std::iter::Peekable;
 
 #[cfg(test)]
 mod tests;
 
+/// Primitive stores all lexer-level primites as returned by the lex command
+///
+/// # Types
+/// - Float is directly represented by rust's f64 type.
+/// - Int is directly represented by rust's i64 type.
+/// - Str corresponds to any string wrapped in double quotes. Internally this
+///   is represented by an owned String.
+/// - Symbol corresponds with a one word string and is used to represent
+///   commands or keywords.
+/// - Nil is currently unused and represents nothing. This may be deprecated.
 #[derive(Debug, PartialEq, Clone)]
 pub enum Primitive {
     Float(f64),
@@ -52,6 +64,28 @@ fn generate_lexeme_vector(input: &String) -> Result<Vec<Lexeme>, &'static str> {
     Ok(lex_vec)
 }
 
+/// The lex function attempts to parse an input string into a vector of
+/// primitives after first breaking it into an intermediary lexeme format.
+///
+/// # Examples
+///
+/// ```
+/// use parser::lexer;
+/// use parser::lexer::Primitive;
+/// let input = String::from("Hello \"world\" 42 3.14");
+///
+/// assert_eq!(
+///     Ok(
+///         vec![
+///             Primitive::Symbol("Hello".to_string()),
+///             Primitive::Str("world".to_string()),
+///             Primitive::Int(42),
+///             Primitive::Float(3.14)
+///         ]
+///     ),
+///     lexer::lex(&input)
+/// );
+/// ```
 pub fn lex(input: &String) -> Result<Vec<Primitive>, &'static str> {
     let mut tok_vec: Vec<Primitive> = Vec::new();
     let lexeme_vec = match generate_lexeme_vector(input) {
