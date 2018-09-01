@@ -1,3 +1,4 @@
+extern crate parser;
 extern crate ws;
 
 pub struct Router {
@@ -70,6 +71,12 @@ struct EventRouter {
 
 impl ws::Handler for EventRouter {
     fn on_message(&mut self, msg: ws::Message) -> ws::Result<()> {
-        self.ws.send(format!("Event received: {}", msg))
+        match msg.into_text() {
+            Ok(s) => match parser::parse(s) {
+                Ok(c) => self.ws.send(format!("Event received: {:?}", c)),
+                Err(e) => self.ws.send(e),
+            },
+            Err(e) => Err(e),
+        }
     }
 }
