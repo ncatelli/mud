@@ -22,7 +22,6 @@ enum Lexeme {
     Char(char),
     Integer(char),
     DoubleQuote,
-    Pound,
     Period,
     Whitespace,
     Error(char),
@@ -34,7 +33,6 @@ impl ToString for Lexeme {
             Lexeme::Char(c) => c.to_string(),
             Lexeme::Integer(c) => c.to_string(),
             Lexeme::DoubleQuote => "\"".to_string(),
-            Lexeme::Pound => "#".to_string(),
             Lexeme::Period => ".".to_string(),
             Lexeme::Whitespace => " ".to_string(),
             Lexeme::Error(c) => format!("Error({})", c).to_string(),
@@ -59,7 +57,7 @@ fn generate_lexeme_vector(input: &String) -> Result<Vec<Lexeme>, &'static str> {
     Ok(lex_vec)
 }
 
-fn lex(input: &String) -> Result<Vec<Token>, &'static str> {
+pub fn lex(input: &String) -> Result<Vec<Token>, &'static str> {
     let mut tok_vec: Vec<Token> = Vec::new();
     let lexeme_vec = match generate_lexeme_vector(input) {
         Ok(lt) => lt,

@@ -1,6 +1,13 @@
 mod command;
 mod lexer;
+#[cfg(test)]
+mod tests;
 
-pub fn parse(_stmt: String) -> Result<command::Command, &'static str> {
-    Err("Invalid Parse")
+//use lexer::{Primitive, Token};
+
+pub fn parse(stmt: String) -> Result<command::Command, &'static str> {
+    match lexer::lex(&stmt) {
+        Ok(_) => Err("passed"),
+        Err(e) => Err(e),
+    }
 }
