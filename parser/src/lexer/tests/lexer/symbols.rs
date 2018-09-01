@@ -13,6 +13,6 @@ fn tokenize_valid_symbol() {
             "helloworld" => (),
             _ => panic!("Token doesn't reference the correct symbol"),
         },
-        _ => panic!("Token is not a Symbol.")
+        _ => panic!("Token is not a Symbol."),
     };
 }

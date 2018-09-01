@@ -3,7 +3,7 @@ use std::iter::Peekable;
 #[cfg(test)]
 mod tests;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Primitive {
     Float(f64),
     Int(i64),
@@ -101,7 +101,9 @@ fn lex_str<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Primiti
     Err("End of input reached before string termination.")
 }
 
-fn lex_number<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Primitive, &'static str> {
+fn lex_number<T: Iterator<Item = Lexeme>>(
+    iter: &mut Peekable<T>,
+) -> Result<Primitive, &'static str> {
     let mut str_vec = String::new();
 
     while let Some(val) = iter.next() {
@@ -126,7 +128,9 @@ fn lex_number<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Prim
     }
 }
 
-fn lex_symbol<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Primitive, &'static str> {
+fn lex_symbol<T: Iterator<Item = Lexeme>>(
+    iter: &mut Peekable<T>,
+) -> Result<Primitive, &'static str> {
     let mut str_vec = String::new();
 
     for val in iter {
