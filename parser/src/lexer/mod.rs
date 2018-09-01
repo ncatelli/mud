@@ -136,6 +136,7 @@ fn lex_symbol<T: Iterator<Item = Lexeme>>(
     for val in iter {
         match val {
             Lexeme::Char(c) => str_vec.push_str(&c.to_string()),
+            Lexeme::Whitespace => break,
             _ => return Err("Ref must contain only characters"),
         }
     }
