@@ -1,6 +1,6 @@
 extern crate ws;
 
-mod router;
+use super::router;
 
 pub fn listen(addr: &str) -> Result<(), &'static str> {
     match ws::listen(&addr, |out| {
