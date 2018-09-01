@@ -3,11 +3,6 @@ use std::iter::Peekable;
 #[cfg(test)]
 mod tests;
 
-#[derive(Debug)]
-pub enum Token {
-    Operand(Primitive),
-}
-
 #[derive(Debug, PartialEq)]
 pub enum Primitive {
     Float(f64),
@@ -57,8 +52,8 @@ fn generate_lexeme_vector(input: &String) -> Result<Vec<Lexeme>, &'static str> {
     Ok(lex_vec)
 }
 
-pub fn lex(input: &String) -> Result<Vec<Token>, &'static str> {
-    let mut tok_vec: Vec<Token> = Vec::new();
+pub fn lex(input: &String) -> Result<Vec<Primitive>, &'static str> {
+    let mut tok_vec: Vec<Primitive> = Vec::new();
     let lexeme_vec = match generate_lexeme_vector(input) {
         Ok(lt) => lt,
         Err(e) => return Err(e),
@@ -90,7 +85,7 @@ pub fn lex(input: &String) -> Result<Vec<Token>, &'static str> {
     Ok(tok_vec)
 }
 
-fn lex_str<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, &'static str> {
+fn lex_str<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Primitive, &'static str> {
     let mut str_vec = String::new();
 
     // Burn the first doublequote.
@@ -98,7 +93,7 @@ fn lex_str<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, 
 
     for val in iter {
         match val {
-            Lexeme::DoubleQuote => return Ok(Token::Operand(Primitive::Str(str_vec))),
+            Lexeme::DoubleQuote => return Ok(Primitive::Str(str_vec)),
             _ => str_vec.push_str(&val.to_string()),
         }
     }
@@ -106,7 +101,7 @@ fn lex_str<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, 
     Err("End of input reached before string termination.")
 }
 
-fn lex_number<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, &'static str> {
+fn lex_number<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Primitive, &'static str> {
     let mut str_vec = String::new();
 
     while let Some(val) = iter.next() {
@@ -120,18 +115,18 @@ fn lex_number<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Toke
 
     if str_vec.contains('.') {
         match str_vec.parse::<f64>() {
-            Ok(f) => return Ok(Token::Operand(Primitive::Float(f))),
+            Ok(f) => return Ok(Primitive::Float(f)),
             Err(_) => return Err("Unable to parse float."),
         }
     } else {
         match str_vec.parse::<i64>() {
-            Ok(i) => return Ok(Token::Operand(Primitive::Int(i))),
+            Ok(i) => return Ok(Primitive::Int(i)),
             Err(_) => return Err("Unable to parse integer."),
         }
     }
 }
 
-fn lex_symbol<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Token, &'static str> {
+fn lex_symbol<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Primitive, &'static str> {
     let mut str_vec = String::new();
 
     for val in iter {
@@ -141,5 +136,5 @@ fn lex_symbol<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Toke
         }
     }
 
-    Ok(Token::Operand(Primitive::Symbol(str_vec)))
+    Ok(Primitive::Symbol(str_vec))
 }

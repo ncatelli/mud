@@ -9,12 +9,10 @@ fn tokenize_valid_symbol() {
 
     let first = &t_vec[0];
     match first {
-        Token::Operand(o) => match o {
-            Primitive::Symbol(s) => match s.as_ref() {
-                "helloworld" => (),
-                _ => panic!("Token doesn't reference the correct symbol"),
-            },
-            _ => panic!("Token isn't a Symbol."),
+        Primitive::Symbol(s) => match s.as_ref() {
+            "helloworld" => (),
+            _ => panic!("Token doesn't reference the correct symbol"),
         },
+        _ => panic!("Token is not a Symbol.")
     };
 }

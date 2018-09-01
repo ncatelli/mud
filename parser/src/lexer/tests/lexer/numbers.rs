@@ -10,14 +10,12 @@ fn tokenize_valid_integer() {
 
     let first = &t_vec[0];
     match first {
-        Token::Operand(o) => match o {
-            Primitive::Int(i) => {
-                if *i != 1337 {
-                    panic!("Token integer not parsed correctly")
-                }
+        Primitive::Int(i) => {
+            if *i != 1337 {
+                panic!("Token integer not parsed correctly")
             }
-            _ => panic!("token isn't an Integer."),
-        },
+        }
+        _ => panic!("token isn't an Integer."),
     };
 }
 
@@ -31,13 +29,11 @@ fn tokenize_valid_float() {
 
     let first = &t_vec[0];
     match first {
-        Token::Operand(o) => match o {
-            Primitive::Float(i) => {
-                if *i != 3.14 {
-                    panic!("Token float not parsed correctly")
-                }
+        Primitive::Float(i) => {
+            if *i != 3.14 {
+                panic!("Token float not parsed correctly")
             }
-            _ => panic!("token isn't an Float."),
-        },
+        }
+        _ => panic!("token isn't an Float."),
     };
 }
