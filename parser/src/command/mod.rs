@@ -1,5 +1,8 @@
 use lexer::Primitive;
 
+#[cfg(test)]
+mod tests;
+
 #[derive(Debug)]
 pub struct Command {
     verb: Option<Primitive>,
@@ -41,7 +44,7 @@ impl Command {
         self.direct_object.clone()
     }
 
-    pub fn prepostion(&self) -> Option<Primitive> {
+    pub fn preposition(&self) -> Option<Primitive> {
         self.preposition.clone()
     }
 
