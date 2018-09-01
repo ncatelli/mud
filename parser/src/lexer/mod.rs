@@ -64,22 +64,29 @@ pub fn lex(input: &String) -> Result<Vec<Primitive>, &'static str> {
     while let Some(l) = lp.peek().cloned() {
         match l {
             Lexeme::DoubleQuote => match lex_str(&mut lp) {
-                Ok(t) => tok_vec.push(t),
+                Ok(t) => {
+                    tok_vec.push(t);
+                    continue;
+                }
                 Err(e) => return Err(e),
             },
             Lexeme::Char(_) => match lex_symbol(&mut lp) {
-                Ok(t) => tok_vec.push(t),
+                Ok(t) => {
+                    tok_vec.push(t);
+                    continue;
+                }
                 Err(e) => return Err(e),
             },
             Lexeme::Integer(_) => match lex_number(&mut lp) {
-                Ok(t) => tok_vec.push(t),
+                Ok(t) => {
+                    tok_vec.push(t);
+                    continue;
+                }
                 Err(e) => return Err(e),
             },
             Lexeme::Whitespace => continue,
             _ => return Err("Unexpected case"),
         }
-
-        lp.next();
     }
 
     Ok(tok_vec)
