@@ -12,7 +12,7 @@ fn tokenize_valid_symbol() {
 }
 
 #[test]
-fn lexer_handles_whitespaces_with_symbols() {
+fn symbols_respect_whitespace() {
     let t_vec = match lex(&"hello world".to_string()) {
         Ok(v) => v,
         Err(e) => panic!(e),

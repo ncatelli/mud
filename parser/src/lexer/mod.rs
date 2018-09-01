@@ -84,7 +84,9 @@ pub fn lex(input: &String) -> Result<Vec<Primitive>, &'static str> {
                 }
                 Err(e) => return Err(e),
             },
-            Lexeme::Whitespace => continue,
+            Lexeme::Whitespace => {
+                lp.next();
+            }
             _ => return Err("Unexpected case"),
         }
     }
