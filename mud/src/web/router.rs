@@ -1,6 +1,8 @@
 extern crate parser;
 extern crate ws;
 
+use super::event;
+
 pub struct Router {
     sender: ws::Sender,
     inner: Box<ws::Handler>,
