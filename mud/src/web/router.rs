@@ -113,7 +113,7 @@ impl ws::Handler for EventRouter {
                 println!("{:?}", ev);
                 match parser::parse(ev.message()) {
                     Ok(c) => {
-                        let payload: String = match serde_json::to_string(&c) {
+                        let payload: String = match serde_json::to_string(&c.to_string()) {
                             Ok(p) => p,
                             Err(e) => {
                                 return Err(ws::Error::new(

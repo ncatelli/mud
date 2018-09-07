@@ -87,3 +87,31 @@ impl Command {
         self.indirect_object.clone()
     }
 }
+
+impl ToString for Command {
+    fn to_string(&self) -> String {
+        let mut output: String = String::new();
+
+        match &self.verb {
+            Some(v) => output.push_str(&format!("{}", v.to_string())),
+            None => (),
+        }
+
+        match &self.direct_object {
+            Some(d) => output.push_str(&format!(" {}", d.to_string())),
+            None => (),
+        }
+
+        match &self.preposition {
+            Some(p) => output.push_str(&format!(" {}", p.to_string())),
+            None => (),
+        }
+
+        match &self.indirect_object {
+            Some(io) => output.push_str(&format!(" {}", io.to_string())),
+            None => (),
+        }
+
+        output
+    }
+}

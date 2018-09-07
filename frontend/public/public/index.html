@@ -116,7 +116,7 @@
           const logMessages = this.state.log.map((event, i) => {
             return (
               <div key={i}>
-                {event}
+                {event.replace(/^"(.+)"$/,'$1')}
               </div>
             )
           });

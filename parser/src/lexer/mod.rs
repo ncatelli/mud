@@ -26,6 +26,18 @@ pub enum Primitive {
     Nil,
 }
 
+impl ToString for Primitive {
+    fn to_string(&self) -> String {
+        match self {
+            Primitive::Float(f) => f.to_string(),
+            Primitive::Int(i) => i.to_string(),
+            Primitive::Str(s) => s.clone(),
+            Primitive::Symbol(sym) => sym.clone(),
+            Primitive::Nil => "".to_string(),
+        }
+    }
+}
+
 #[derive(Debug, PartialEq, Clone)]
 enum Lexeme {
     Char(char),
