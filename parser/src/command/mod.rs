@@ -1,10 +1,13 @@
+extern crate serde;
+extern crate serde_json;
+
 use lexer::Primitive;
 
 #[cfg(test)]
 mod tests;
 
 // Command stores the result of a parsed input line.
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Command {
     verb: Option<Primitive>,
     direct_object: Option<Primitive>,

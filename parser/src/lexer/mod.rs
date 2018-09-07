@@ -1,4 +1,6 @@
 //! lexer includes methods for lexing input strings into internal primitives.
+extern crate serde;
+extern crate serde_json;
 
 use std::iter::Peekable;
 
@@ -15,7 +17,7 @@ mod tests;
 /// - Symbol corresponds with a one word string and is used to represent
 ///   commands or keywords.
 /// - Nil is currently unused and represents nothing. This may be deprecated.
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub enum Primitive {
     Float(f64),
     Int(i64),

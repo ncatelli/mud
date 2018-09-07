@@ -1,29 +1,26 @@
 extern crate serde;
 extern crate serde_json;
 
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum EventType {
+    Game,
+}
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Event {
-    event: String,
+    event: EventType,
     message: String,
 }
 
-pub enum EventType {
-    Message,
-}
-
 impl Event {
-    pub fn new(event: String, message: String) -> Event {
+    pub fn new(event: EventType, message: String) -> Event {
         Event {
             event: event,
             message: message,
         }
     }
 
-    pub fn event(&self) -> Result<EventType, &'static str> {
-        match &*self.event {
-            "message" => Ok(EventType::Message),
-            _ => Err("Invalid event type"),
-        }
+    pub fn event(&self) -> EventType {
+        self.event.clone()
     }
 
     pub fn message(&self) -> String {

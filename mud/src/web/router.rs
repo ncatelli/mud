@@ -1,7 +1,31 @@
 extern crate parser;
+extern crate serde;
+extern crate serde_json;
 extern crate ws;
 
 use super::event;
+
+use std::error::Error as StdError;
+use std::fmt;
+
+#[derive(Debug)]
+struct GenericEventErr;
+
+impl StdError for GenericEventErr {
+    fn description(&self) -> &str {
+        "Invalid EventKind"
+    }
+
+    fn cause(&self) -> Option<&StdError> {
+        None
+    }
+}
+
+impl fmt::Display for GenericEventErr {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.description())
+    }
+}
 
 pub struct Router {
     sender: ws::Sender,
@@ -74,10 +98,39 @@ struct EventRouter {
 impl ws::Handler for EventRouter {
     fn on_message(&mut self, msg: ws::Message) -> ws::Result<()> {
         match msg.into_text() {
-            Ok(s) => match parser::parse(s) {
-                Ok(c) => self.ws.send(format!("Event received: {:?}", c)),
-                Err(e) => self.ws.send(e),
-            },
+            Ok(s) => {
+                let ev: event::Event = match serde_json::from_str(&s) {
+                    Ok(de) => de,
+                    Err(e) => {
+                        println!("deserialize error {:?}", &e);
+                        return Err(ws::Error::new(
+                            ws::ErrorKind::Custom(Box::new(GenericEventErr {})),
+                            e.to_string(),
+                        ));
+                    }
+                };
+
+                println!("{:?}", ev);
+                match parser::parse(ev.message()) {
+                    Ok(c) => {
+                        let payload: String = match serde_json::to_string(&c) {
+                            Ok(p) => p,
+                            Err(e) => {
+                                return Err(ws::Error::new(
+                                    ws::ErrorKind::Custom(Box::new(GenericEventErr {})),
+                                    e.to_string(),
+                                ));
+                            }
+                        };
+
+                        self.ws.send(payload)
+                    }
+                    Err(e) => {
+                        println!("{}", &e);
+                        self.ws.send(e)
+                    }
+                }
+            }
             Err(e) => Err(e),
         }
     }
