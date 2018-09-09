@@ -14,6 +14,7 @@ services:
       - mud 
   mud:
     build: .
+    image: ncatelli/mud:latest
     networks:
       - backend
 networks:
