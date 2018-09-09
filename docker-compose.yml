@@ -3,12 +3,15 @@ services:
   ingress:
     image: nginx:1.15.3-alpine
     volumes:
-      - ./frontend/conf/nginx/conf.d:/etc/nginx/conf.d
+      - ./frontend/public:/www/mud:ro
+      - ./frontend/nginx/conf.d:/etc/nginx/conf.d:ro
     ports:
       - "80:80"
     networks:
       - frontend
       - backend
+    depends_on:
+      - mud 
   mud:
     build: .
     networks:
