@@ -1,5 +1,4 @@
 ---
-
 pipeline:
   test:
     image: rust:slim-stretch
