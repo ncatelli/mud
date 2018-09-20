@@ -4,6 +4,8 @@ extern crate serde_json;
 
 use std::iter::Peekable;
 
+mod errors;
+
 #[cfg(test)]
 mod tests;
 
