@@ -10,26 +10,33 @@ enum ErrorKind {
     OpenQuote,
 }
 
+impl ToString for ErrorKind {
+    fn to_string(&self) -> String {
+        match self {
+            ErrorKind::InvalidChar => "Invalid Char".to_string(),
+            ErrorKind::OpenQuote => "Open Quote".to_string(),
+        }
+    }
+}
+
 #[derive(Debug, PartialEq)]
 struct ParseError {
     error_kind: ErrorKind,
     line: String,
-    column: u32,
 }
 
 impl ParseError {
-    fn new(ek: ErrorKind, l: String, c: u32) -> ParseError {
+    fn new(ek: ErrorKind, l: String) -> ParseError {
         ParseError {
             error_kind: ek,
             line: l,
-            column: c,
         }
     }
 }
 
 impl fmt::Display for ParseError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Shit broke")
+        write!(f, "{}: {}", self.error_kind.to_string(), self.line)
     }
 }
 
