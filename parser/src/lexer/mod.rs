@@ -1,10 +1,10 @@
 //! lexer includes methods for lexing input strings into internal primitives.
 extern crate serde;
 extern crate serde_json;
-
-use std::iter::Peekable;
-
 mod errors;
+
+use self::errors::{ErrorKind, ParseError};
+use std::iter::Peekable;
 
 #[cfg(test)]
 mod tests;
@@ -74,8 +74,7 @@ fn generate_lexeme_vector(input: &String) -> Result<Vec<Lexeme>, &'static str> {
             '"' => Lexeme::DoubleQuote,
             '.' => Lexeme::Period,
             _ => Lexeme::Error(c),
-        })
-        .collect();
+        }).collect();
 
     Ok(lex_vec)
 }

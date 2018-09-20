@@ -5,7 +5,7 @@ use std::fmt;
 mod tests;
 
 #[derive(Debug, PartialEq)]
-enum ErrorKind {
+pub enum ErrorKind {
     InvalidChar,
     OpenQuote,
 }
@@ -20,13 +20,13 @@ impl ToString for ErrorKind {
 }
 
 #[derive(Debug, PartialEq)]
-struct ParseError {
+pub struct ParseError {
     error_kind: ErrorKind,
     line: String,
 }
 
 impl ParseError {
-    fn new(ek: ErrorKind, l: String) -> ParseError {
+    pub fn new(ek: ErrorKind, l: String) -> ParseError {
         ParseError {
             error_kind: ek,
             line: l,
@@ -42,7 +42,10 @@ impl fmt::Display for ParseError {
 
 impl error::Error for ParseError {
     fn description(&self) -> &str {
-        "Shit broke"
+        match self.error_kind {
+            ErrorKind::InvalidChar => "Invalid char",
+            ErrorKind::OpenQuote => "Open quote",
+        }
     }
 
     fn cause(&self) -> Option<&error::Error> {
