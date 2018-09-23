@@ -1,10 +1,14 @@
+//! errors includes parse error types.
+extern crate serde;
+extern crate serde_json;
+
 use std::error;
 use std::fmt;
 
 #[cfg(test)]
 mod tests;
 
-#[derive(Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub enum ErrorKind {
     InvalidLexeme,
     InvalidTokenCount,
@@ -31,7 +35,7 @@ impl ToString for ErrorKind {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct ParseError {
     error_kind: ErrorKind,
     cause: String,

@@ -127,7 +127,16 @@ impl ws::Handler for EventRouter {
                     }
                     Err(e) => {
                         println!("{}", &e);
-                        self.ws.send(e.to_string())
+                        let err: String = match serde_json::to_string(&e.to_string()) {
+                            Ok(p) => p,
+                            Err(e) => {
+                                return Err(ws::Error::new(
+                                    ws::ErrorKind::Custom(Box::new(GenericEventErr {})),
+                                    e.to_string(),
+                                ));
+                            }
+                        };
+                        self.ws.send(err)
                     }
                 }
             }
