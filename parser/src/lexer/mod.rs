@@ -2,6 +2,7 @@
 extern crate serde;
 extern crate serde_json;
 
+use super::errors::{ErrorKind, ParseError};
 use std::iter::Peekable;
 
 #[cfg(test)]
@@ -62,7 +63,7 @@ impl ToString for Lexeme {
 }
 
 /// Read each character into an array of Lexemes.
-fn generate_lexeme_vector(input: &String) -> Result<Vec<Lexeme>, &'static str> {
+fn generate_lexeme_vector(input: &String) -> Result<Vec<Lexeme>, ParseError> {
     let lex_vec = input
         .chars()
         .map(|c| match c {
@@ -72,8 +73,7 @@ fn generate_lexeme_vector(input: &String) -> Result<Vec<Lexeme>, &'static str> {
             '"' => Lexeme::DoubleQuote,
             '.' => Lexeme::Period,
             _ => Lexeme::Error(c),
-        })
-        .collect();
+        }).collect();
 
     Ok(lex_vec)
 }
@@ -100,7 +100,7 @@ fn generate_lexeme_vector(input: &String) -> Result<Vec<Lexeme>, &'static str> {
 ///     lexer::lex(&input)
 /// );
 /// ```
-pub fn lex(input: &String) -> Result<Vec<Primitive>, &'static str> {
+pub fn lex(input: &String) -> Result<Vec<Primitive>, ParseError> {
     let mut tok_vec: Vec<Primitive> = Vec::new();
     let lexeme_vec = match generate_lexeme_vector(input) {
         Ok(lt) => lt,
@@ -135,14 +135,19 @@ pub fn lex(input: &String) -> Result<Vec<Primitive>, &'static str> {
             Lexeme::Whitespace => {
                 lp.next();
             }
-            _ => return Err("Unexpected case"),
+            _ => {
+                return Err(ParseError::new(
+                    ErrorKind::InvalidLexeme,
+                    format!("{} is an invalid lexeme.", l.to_string()),
+                ))
+            }
         }
     }
 
     Ok(tok_vec)
 }
 
-fn lex_str<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Primitive, &'static str> {
+fn lex_str<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Primitive, ParseError> {
     let mut str_vec = String::new();
 
     // Burn the first doublequote.
@@ -155,12 +160,13 @@ fn lex_str<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Primiti
         }
     }
 
-    Err("End of input reached before string termination.")
+    Err(ParseError::new(
+        ErrorKind::EOI,
+        "End of input reached before string termination.".to_string(),
+    ))
 }
 
-fn lex_number<T: Iterator<Item = Lexeme>>(
-    iter: &mut Peekable<T>,
-) -> Result<Primitive, &'static str> {
+fn lex_number<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Primitive, ParseError> {
     let mut str_vec = String::new();
 
     while let Some(val) = iter.next() {
@@ -168,33 +174,41 @@ fn lex_number<T: Iterator<Item = Lexeme>>(
             Lexeme::Integer(i) => str_vec.push_str(&i.to_string()),
             Lexeme::Period => str_vec.push_str(&String::from(".")),
             Lexeme::Whitespace => break,
-            _ => return Err("Invalid character."),
+            _ => {
+                return Err(ParseError::new(
+                    ErrorKind::InvalidLexeme,
+                    format!("{} is an invalid number.", val.to_string()),
+                ))
+            }
         }
     }
 
     if str_vec.contains('.') {
         match str_vec.parse::<f64>() {
             Ok(f) => return Ok(Primitive::Float(f)),
-            Err(_) => return Err("Unable to parse float."),
+            Err(_) => return Err(ParseError::new(ErrorKind::FloatError, str_vec)),
         }
     } else {
         match str_vec.parse::<i64>() {
             Ok(i) => return Ok(Primitive::Int(i)),
-            Err(_) => return Err("Unable to parse integer."),
+            Err(_) => return Err(ParseError::new(ErrorKind::IntegerError, str_vec)),
         }
     }
 }
 
-fn lex_symbol<T: Iterator<Item = Lexeme>>(
-    iter: &mut Peekable<T>,
-) -> Result<Primitive, &'static str> {
+fn lex_symbol<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Primitive, ParseError> {
     let mut str_vec = String::new();
 
     for val in iter {
         match val {
             Lexeme::Char(c) => str_vec.push_str(&c.to_string()),
             Lexeme::Whitespace => break,
-            _ => return Err("Ref must contain only characters"),
+            _ => {
+                return Err(ParseError::new(
+                    ErrorKind::InvalidLexeme,
+                    format!("{} is an invalid symbol.", val.to_string()),
+                ))
+            }
         }
     }
 

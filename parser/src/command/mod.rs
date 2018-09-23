@@ -1,6 +1,7 @@
 extern crate serde;
 extern crate serde_json;
 
+use errors::{ErrorKind, ParseError};
 use lexer::Primitive;
 
 #[cfg(test)]
@@ -43,7 +44,7 @@ impl Command {
     //   )
     // );
     // ```
-    pub fn new(tokens: Vec<Primitive>) -> Result<Command, &'static str> {
+    pub fn new(tokens: Vec<Primitive>) -> Result<Command, ParseError> {
         match tokens.len() {
             1 => Ok(Command {
                 verb: Some(tokens[0].clone()),
@@ -63,7 +64,10 @@ impl Command {
                 preposition: Some(tokens[2].clone()),
                 indirect_object: Some(tokens[3].clone()),
             }),
-            _ => Err("Invalid number of tokens"),
+            _ => Err(ParseError::new(
+                ErrorKind::InvalidTokenCount,
+                format!("received {} tokens, expect 1, 2 or 4.", tokens.len()),
+            )),
         }
     }
 
