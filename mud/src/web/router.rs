@@ -127,7 +127,7 @@ impl ws::Handler for EventRouter {
                     }
                     Err(e) => {
                         println!("{}", &e);
-                        self.ws.send(e)
+                        self.ws.send(e.to_string())
                     }
                 }
             }
