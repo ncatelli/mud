@@ -1,0 +1,17 @@
+{
+    "id": 122,
+    "name": "Generic Object",
+    "description": "This is a generic object",
+    "contents": [0],
+    "properties": {
+        "example property": "example"
+    },
+    "verbs": {
+        "move": {
+            "verb": ["move"],
+            "direct object": ["any"],
+            "preposition": ["from", "to"],
+            "indirect object": ["any"]
+        }
+    }
+}
