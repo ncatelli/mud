@@ -27,10 +27,16 @@ fn read_example_object() -> String {
 fn can_deserialize_json_object() {
     let raw_object = read_example_object();
 
-    let mut map = HashMap::new();
-    map.insert(
+    let mut prop_map = HashMap::new();
+    prop_map.insert(
         "example property".to_string(),
         parser::lexer::Primitive::Str("example".to_string())
+    );
+
+    let mut verb_map = HashMap::new();
+    verb_map.insert(
+        "example property".to_string(),
+        vec![parser::lexer::Primitive::Str("example".to_string())]
         );
 
     let obj: Object = match serde_json::from_str(&raw_object) {
@@ -43,6 +49,6 @@ fn can_deserialize_json_object() {
         name: parser::lexer::Primitive::Str("Generic Object".to_string()),
         description: parser::lexer::Primitive::Str("This is a generic object".to_string()),
         contents: vec![parser::lexer::Primitive::Int(0)],
-        properties: map,
+        properties: prop_map
     }, obj);
 }

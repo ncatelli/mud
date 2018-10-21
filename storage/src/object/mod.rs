@@ -7,7 +7,7 @@ use std::collections::HashMap;
 #[cfg(test)]
 mod tests;
 
-// Object stores the basic object that all game objects willb e serialized 
+// Object stores the basic object that all game objects will be serialized 
 // into.
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct Object {
@@ -45,5 +45,10 @@ impl Object {
             Some(v) => Some(v.clone()),
             None => None
         }
+    }
+
+    #[allow(dead_code)]
+    fn set_property(mut self, property: String, value: parser::lexer::Primitive) {
+        self.properties.insert(property.clone(), value.clone());
     }
 }
