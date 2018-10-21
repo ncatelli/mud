@@ -8,10 +8,10 @@
     },
     "verbs": {
         "move": {
-            "verb": ["move"],
-            "direct object": ["any"],
-            "preposition": ["from", "to"],
-            "indirect object": ["any"]
+            "verb": [{"Symbol": "move"}],
+            "direct object": [{"Symbol": "any"}],
+            "preposition": [{"Symbol": "from"}, {"Symbol": "to"}],
+            "indirect object": [{"Symbol": "any"}]
         }
     }
 }

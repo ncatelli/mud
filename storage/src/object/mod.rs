@@ -2,6 +2,8 @@ extern crate serde;
 extern crate serde_json;
 extern crate parser;
 
+use std::collections::HashMap;
+
 #[cfg(test)]
 mod tests;
 
@@ -13,6 +15,7 @@ pub struct Object {
     name: parser::lexer::Primitive,
     description: parser::lexer::Primitive,
     contents: Vec<parser::lexer::Primitive>,
+    properties: HashMap<String, parser::lexer::Primitive>
 }
 
 impl Object {
@@ -34,5 +37,13 @@ impl Object {
     #[allow(dead_code)]
     fn contents(self) -> Vec<parser::lexer::Primitive> {
         self.contents
+    }
+
+    #[allow(dead_code)]
+    fn get_property(self, property: String) -> Option<parser::lexer::Primitive> {
+        match self.properties.get(&property) {
+            Some(v) => Some(v.clone()),
+            None => None
+        }
     }
 }
