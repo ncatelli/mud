@@ -4,7 +4,7 @@ extern crate serde_json;
 
 use std::fs::File;
 use std::io::prelude::*;
-use object::object::Object;
+use object::Object;
 
 const EXAMPLE_OBJECT_FILE_PATH: &'static str = "/src/object/tests/example_object.json";
 
@@ -30,5 +30,10 @@ fn can_deserialize_json_object() {
         Err(e) => panic!(e)
     };
 
-    assert_eq!(122, obj.id);
+    assert_eq!(Object{
+        id: 122,
+        name: String::from("Generic Object"),
+        description: String::from("This is a generic object"),
+        contents: vec![0],
+    }, obj);
 }
