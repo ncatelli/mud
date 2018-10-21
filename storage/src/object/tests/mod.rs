@@ -1,6 +1,7 @@
 //! lexer includes methods for lexing input strings into internal primitives.
 extern crate serde;
 extern crate serde_json;
+extern crate parser;
 
 use std::fs::File;
 use std::io::prelude::*;
@@ -31,9 +32,9 @@ fn can_deserialize_json_object() {
     };
 
     assert_eq!(Object{
-        id: 122,
-        name: String::from("Generic Object"),
-        description: String::from("This is a generic object"),
-        contents: vec![0],
+        id: parser::lexer::Primitive::Int(122),
+        name: parser::lexer::Primitive::Str("Generic Object".to_string()),
+        description: parser::lexer::Primitive::Str("This is a generic object".to_string()),
+        contents: vec![parser::lexer::Primitive::Int(0)],
     }, obj);
 }

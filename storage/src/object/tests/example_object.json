@@ -1,10 +1,10 @@
 {
-    "id": 122,
-    "name": "Generic Object",
-    "description": "This is a generic object",
-    "contents": [0],
+    "id": { "Int": 122 },
+    "name": { "Str": "Generic Object" },
+    "description": { "Str": "This is a generic object" },
+    "contents": [{"Int": 0}],
     "properties": {
-        "example property": "example"
+    "example property": { "Str": "example" }
     },
     "verbs": {
         "move": {
