@@ -4,6 +4,8 @@ extern crate parser;
 
 use std::collections::HashMap;
 
+mod properties;
+
 #[cfg(test)]
 mod tests;
 
@@ -19,36 +21,30 @@ pub struct Object {
 }
 
 impl Object {
-    #[allow(dead_code)]
-    fn id(self) -> parser::lexer::Primitive {
+    pub fn id(self) -> parser::lexer::Primitive {
         self.id
     }
 
-    #[allow(dead_code)]
-    fn name(self) -> parser::lexer::Primitive {
+    pub fn name(self) -> parser::lexer::Primitive {
         self.name
     }
 
-    #[allow(dead_code)]
-    fn description(self) -> parser::lexer::Primitive {
+    pub fn description(self) -> parser::lexer::Primitive {
         self.description
     }
 
-    #[allow(dead_code)]
-    fn contents(self) -> Vec<parser::lexer::Primitive> {
+    pub fn contents(self) -> Vec<parser::lexer::Primitive> {
         self.contents
     }
 
-    #[allow(dead_code)]
-    fn get_property(self, property: String) -> Option<parser::lexer::Primitive> {
+    pub fn get_property(self, property: String) -> Option<parser::lexer::Primitive> {
         match self.properties.get(&property) {
             Some(v) => Some(v.clone()),
             None => None
         }
     }
 
-    #[allow(dead_code)]
-    fn set_property(mut self, property: String, value: parser::lexer::Primitive) {
+    pub fn set_property(mut self, property: String, value: parser::lexer::Primitive) {
         self.properties.insert(property.clone(), value.clone());
     }
 }
