@@ -7,6 +7,8 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::collections::HashMap;
 use object::Object;
+use object::properties::Properties;
+
 
 const EXAMPLE_OBJECT_FILE_PATH: &'static str = "/src/object/tests/example_object.json";
 
@@ -27,7 +29,7 @@ fn read_example_object() -> String {
 fn can_deserialize_json_object() {
     let raw_object = read_example_object();
 
-    let mut prop_map = HashMap::new();
+    let mut prop_map = Properties::new();
     prop_map.insert(
         "example property".to_string(),
         parser::lexer::Primitive::Str("example".to_string())

@@ -8,29 +8,11 @@ use std::collections::HashMap;
 mod tests;
 
 // Properties stores a key value of object properties.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
-pub struct Properties {
-    properties: HashMap<String, parser::lexer::Primitive>
-}
-
-impl Properties {
-    #[allow(dead_code)]
-    pub fn get(self, property: String) -> Option<parser::lexer::Primitive> {
-        match self.properties.get(&property) {
-            Some(v) => Some(v.clone()),
-            None => None
-        }
-    }
-
-    #[allow(dead_code)]
-    pub fn set(mut self, property: String, value: parser::lexer::Primitive) {
-        self.properties.insert(property.clone(), value.clone());
-    }
-}
+pub type Properties = HashMap<String, parser::lexer::Primitive>;
 
 // Validates that a properties key is valid.
 #[allow(dead_code)]
-fn validate_property_key(property: &str) -> bool {
+pub fn validate_property_key(property: &str) -> bool {
     for c in ["\n", " "].iter() {
         if property.contains(c) {
             return false
