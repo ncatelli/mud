@@ -5,9 +5,10 @@ extern crate parser;
 
 use std::fs::File;
 use std::io::prelude::*;
-use std::collections::HashMap;
 use object::Object;
 use object::properties::Properties;
+use object::verbs::verb::Verb;
+use object::verbs::Verbs;
 
 
 const EXAMPLE_OBJECT_FILE_PATH: &'static str = "/src/object/tests/example_object.json";
@@ -35,11 +36,15 @@ fn can_deserialize_json_object() {
         parser::lexer::Primitive::Str("example".to_string())
     );
 
-    let mut verb_map = HashMap::new();
-    verb_map.insert(
-        "example property".to_string(),
-        vec![parser::lexer::Primitive::Str("example".to_string())]
-        );
+    let mut example_verb = Verb::new();
+    example_verb.verb.push(parser::lexer::Primitive::Symbol("move".to_string()));
+    example_verb.direct_object.push(parser::lexer::Primitive::Symbol("any".to_string()));
+    example_verb.preposition.push(parser::lexer::Primitive::Symbol("from".to_string()));
+    example_verb.preposition.push(parser::lexer::Primitive::Symbol("to".to_string()));
+    example_verb.indirect_object.push(parser::lexer::Primitive::Symbol("any".to_string()));
+
+    let mut verb_map = Verbs::new();
+    verb_map.insert("move".to_string(), example_verb);
 
     let obj: Object = match serde_json::from_str(&raw_object) {
         Ok(obj) => obj,
@@ -51,6 +56,7 @@ fn can_deserialize_json_object() {
         name: parser::lexer::Primitive::Str("Generic Object".to_string()),
         description: parser::lexer::Primitive::Str("This is a generic object".to_string()),
         contents: vec![parser::lexer::Primitive::Int(0)],
-        properties: prop_map
+        properties: prop_map,
+        verbs: verb_map,
     }, obj);
 }

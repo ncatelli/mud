@@ -3,6 +3,7 @@ extern crate serde_json;
 extern crate parser;
 
 pub mod properties;
+pub mod verbs;
 
 #[cfg(test)]
 mod tests;
@@ -15,7 +16,8 @@ pub struct Object {
     name: parser::lexer::Primitive,
     description: parser::lexer::Primitive,
     contents: Vec<parser::lexer::Primitive>,
-    properties: properties::Properties
+    properties: properties::Properties,
+    verbs: verbs::Verbs
 }
 
 impl Object {

@@ -9,9 +9,9 @@
     "verbs": {
         "move": {
             "verb": [{"Symbol": "move"}],
-            "direct object": [{"Symbol": "any"}],
+            "direct_object": [{"Symbol": "any"}],
             "preposition": [{"Symbol": "from"}, {"Symbol": "to"}],
-            "indirect object": [{"Symbol": "any"}]
+            "indirect_object": [{"Symbol": "any"}]
         }
     }
 }
