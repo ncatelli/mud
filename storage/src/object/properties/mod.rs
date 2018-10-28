@@ -4,6 +4,9 @@ extern crate parser;
 
 use std::collections::HashMap;
 
+#[cfg(test)]
+mod tests;
+
 // Properties stores a key value of object properties.
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct Properties {
