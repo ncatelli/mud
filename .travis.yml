@@ -7,4 +7,4 @@ before_install:
 - docker pull rust:slim-stretch
 
 script:
-- docker run rust:slim-stretch cargo test
+- docker run -v $PWD:/opt/mud/ -w /opt/mud/ rust:slim-stretch cargo test
