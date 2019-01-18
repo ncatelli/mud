@@ -1,0 +1,10 @@
+language: generic
+
+services:
+  - docker
+
+before_install:
+- docker pull rust:slim-stretch
+
+script:
+- docker run -v $PWD:/opt/mud/ -w /opt/mud/ rust:slim-stretch cargo test
