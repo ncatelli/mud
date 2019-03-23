@@ -1,0 +1,17 @@
+{
+    "id": { "Int": 122 },
+    "name": { "Str": "Generic Object" },
+    "description": { "Str": "This is a generic object" },
+    "contents": [{"Int": 0}],
+    "properties": {
+    "example property": { "Str": "example" }
+    },
+    "verbs": {
+        "move": {
+            "verb": [{"Symbol": "move"}],
+            "direct_object": [{"Symbol": "any"}],
+            "preposition": [{"Symbol": "from"}, {"Symbol": "to"}],
+            "indirect_object": [{"Symbol": "any"}]
+        }
+    }
+}
