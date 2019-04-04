@@ -73,7 +73,8 @@ fn generate_lexeme_vector(input: &String) -> Result<Vec<Lexeme>, ParseError> {
             '"' => Lexeme::DoubleQuote,
             '.' => Lexeme::Period,
             _ => Lexeme::Error(c),
-        }).collect();
+        })
+        .collect();
 
     Ok(lex_vec)
 }
@@ -139,7 +140,7 @@ pub fn lex(input: &String) -> Result<Vec<Primitive>, ParseError> {
                 return Err(ParseError::new(
                     ErrorKind::InvalidLexeme,
                     format!("{} is an invalid lexeme.", l.to_string()),
-                ))
+                ));
             }
         }
     }
@@ -178,7 +179,7 @@ fn lex_number<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Prim
                 return Err(ParseError::new(
                     ErrorKind::InvalidLexeme,
                     format!("{} is an invalid number.", val.to_string()),
-                ))
+                ));
             }
         }
     }
@@ -207,7 +208,7 @@ fn lex_symbol<T: Iterator<Item = Lexeme>>(iter: &mut Peekable<T>) -> Result<Prim
                 return Err(ParseError::new(
                     ErrorKind::InvalidLexeme,
                     format!("{} is an invalid symbol.", val.to_string()),
-                ))
+                ));
             }
         }
     }
