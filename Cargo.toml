@@ -3,4 +3,5 @@ members = [
     "parser",
     "mud",
     "storage",
+    "engine",
 ]
