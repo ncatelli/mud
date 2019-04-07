@@ -183,6 +183,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "engine"
 version = "0.1.0"
 dependencies = [
+ "parser 0.1.0",
  "specs 0.14.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
